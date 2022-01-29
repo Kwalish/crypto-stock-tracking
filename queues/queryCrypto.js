@@ -1,8 +1,9 @@
 const Queue = require('bull');
+const Price = require('../model/price');
+const { redisUrl } = require('../config');
 const queryCryptoAPI = require('../utils/queryCryptoAPI');
 
-const queryCryptoQueue = new Queue('query_Crypto', process.env.REDIS_URL);
-const Price = require('../model/price');
+const queryCryptoQueue = new Queue('query_Crypto', redisUrl);
 
 queryCryptoQueue.process(async (job, done) => {
   const { ticker } = job.data.ticker;
