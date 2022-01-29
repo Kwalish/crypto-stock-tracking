@@ -8,12 +8,12 @@ const adminCreds = {
   email: process.env.ADMIN_EMAIL || 'admin@test.com',
   password: process.env.ADMIN_PASSWORD || 'secret',
 };
-const redisUrl = redisUrlParse(process.env.REDIS_URL);
+const redisUrl = process.env.REDIS_URL;
 
 module.exports = {
   dbUrl,
   coinMarketCapKey,
   adminJSCookieString,
   adminCreds,
-  redisUrl,
+  redisUrl: redisUrlParse(redisUrl),
 };
