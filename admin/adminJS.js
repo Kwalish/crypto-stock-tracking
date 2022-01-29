@@ -17,6 +17,7 @@ const adminBro = new AdminJS({
     Ticker,
     Transaction,
     Price,
+    Admin,
   ],
   dashboard,
   rootPath: '/admin',
