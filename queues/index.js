@@ -16,6 +16,6 @@ const {
   serverAdapter,
 });
 
-serverAdapter.setBasePath('/admin/queues');
+serverAdapter.setBasePath('/queues');
 
 module.exports = serverAdapter;

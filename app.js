@@ -5,7 +5,6 @@ const queueRouter = require('./queues');
 
 const { portfolioQueue } = require('./queues/portfolio');
 
-portfolioQueue.add();
 
 require('./config/mongoose');
 require('./config/seed');
@@ -15,7 +14,7 @@ const PORT = process.env.PORT || 3000;
 
 const app = express();
 
-app.use('/admin/queues', queueRouter.getRouter());
+app.use('/queues', queueRouter.getRouter());
 app.use('/admin', adminRouter);
 
 app.listen(PORT, () => {

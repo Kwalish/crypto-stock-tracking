@@ -2,13 +2,8 @@ const AdminJS = require('adminjs');
 const Transaction = require('../model/transaction');
 const Price = require('../model/price');
 
-const { portfolioQueue } = require('../queues/portfolio');
-
-
-
 module.exports = {
   handler: async () => {
-    portfolioQueue.add({});
     const totalSpent = await Transaction.aggregate([
       { $group: { _id: null, amount: { $sum: '$price' } } },
     ]);
