@@ -1,7 +1,7 @@
 const express = require('express');
+require('dotenv').config();
 const adminRouter = require('./admin/adminJS');
 const queueRouter = require('./queues/index');
-require('dotenv').config();
 
 require('./config/mongoose');
 require('./config/seed');
