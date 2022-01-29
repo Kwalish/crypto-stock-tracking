@@ -1,7 +1,9 @@
 const express = require('express');
 require('dotenv').config();
 const adminRouter = require('./admin/adminJS');
-const queueRouter = require('./queues/index');
+const queueRouter = require('./queues');
+
+console.log(queueRouter);
 
 require('./config/mongoose');
 require('./config/seed');
@@ -11,8 +13,8 @@ const PORT = process.env.PORT || 3000;
 
 const app = express();
 
+app.use('/admin/queues', queueRouter.getRouter());
 app.use('/admin', adminRouter);
-app.use('/admin/queues', queueRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is up on port ${PORT}`);

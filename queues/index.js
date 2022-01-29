@@ -18,6 +18,4 @@ const {
 
 serverAdapter.setBasePath('/admin/queues');
 
-const router = serverAdapter.getRouter();
-
-module.exports = router;
+module.exports = serverAdapter;
