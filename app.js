@@ -3,8 +3,9 @@ const adminRouter = require('./admin/adminJS');
 const queueRouter = require('./queues/index');
 require('dotenv').config();
 
-require('./jobs');
 require('./config/mongoose');
+require('./config/seed');
+require('./jobs');
 
 const PORT = process.env.PORT || 3000;
 

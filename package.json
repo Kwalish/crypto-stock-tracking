@@ -5,6 +5,7 @@
     "@adminjs/mongoose": "^2.0.0",
     "adminjs": "^5.5.1",
     "axios": "^0.25.0",
+    "bcrypt": "^5.0.1",
     "bull": "^4.4.0",
     "bull-board": "^2.1.3",
     "dotenv": "^14.3.2",
