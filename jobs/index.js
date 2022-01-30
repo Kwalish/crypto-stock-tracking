@@ -1,8 +1,8 @@
 const { portfolioQueue } = require('../queues/portfolio');
 
-portfolioQueue.add();
+portfolioQueue.removeRepeatable({ repeat: { cron: '*/4 * * * *' } });
 
 portfolioQueue.add(
   {},
-  { repeat: { cron: '0 */4 * * *' }, timeout: 120 * 1000 },
+  { repeat: { cron: '0 8 * * *' }, timeout: 120 * 1000 },
 );
