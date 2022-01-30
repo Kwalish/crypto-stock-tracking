@@ -47,7 +47,7 @@ module.exports = {
       {
         $project: {
           ticker: '$ticker.ticker',
-          purchase: '$price',
+          purchase: '$amount',
           value: 1,
           profit: 1,
         },
