@@ -29,6 +29,8 @@ module.exports = {
       },
     ]);
 
+    const lastUpdatedAt = await Price.findOne().sort({ date: -1 });
+
     const currentValue = portfolio.map((investment) => {
       const price = prices
         .filter((uniprice) => uniprice._id._id.toString() === investment._id.toString());
@@ -44,6 +46,7 @@ module.exports = {
     return {
       totalSpent: totalSpent[0].amount,
       currentValue,
+      lastUpdatedAt,
     };
   },
   component: AdminJS.bundle('./components/Dashboard.jsx'),

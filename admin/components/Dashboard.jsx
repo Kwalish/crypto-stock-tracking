@@ -5,19 +5,22 @@ import { useEffect, useState } from 'react';
 const api = new ApiClient()
 
 const Dashboard = () => {
-  const [data, setData] = useState({totalSpent: 0, currentValue: []})
+  const [data, setData] = useState({totalSpent: 0, currentValue: [], lastUpdatedAt: new Date() })
 
   useEffect(() => {
     // getting the data from adminbro object
     api.getDashboard().then((response) => {
-        const { totalSpent, currentValue } = response.data;
+        const { totalSpent, currentValue, lastUpdatedAt } = response.data;
         
         const totalValue = currentValue.reduce((a, b) => +a + (b.value || 0), 0)
         
         const totalProfit = totalValue - totalSpent
+
+        console.log(lastUpdatedAt)
         
         setData({
             currentValue,
+            lastUpdatedAt: new Date(lastUpdatedAt.date),
             totalSpent: Math.round(totalSpent),
             totalValue: Math.round(totalValue),
             totalProfit: Math.round(totalProfit),
@@ -31,6 +34,9 @@ const Dashboard = () => {
             <Box flexGrow="1" flexBasis="0" variant="white" margin="5px">
                 <Text fontSize="25px" fontWeight="900" marginTop="15px" textAlign="center">
                     {new Date().toLocaleDateString('en-GB')}
+                </Text>
+                <Text textAlign="center">
+                    last updated: {data.lastUpdatedAt.toLocaleDateString('en-GB')}
                 </Text>
             </Box>
         </Box>
