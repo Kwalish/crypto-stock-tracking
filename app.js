@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 3000;
 
 const app = express();
 
-app.use('/queues', queueRouter.getRouter());
+app.use('/admin/queues', queueRouter.getRouter());
 app.use('/admin', adminRouter);
 
 app.listen(PORT, () => {

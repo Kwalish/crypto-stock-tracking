@@ -1,11 +1,9 @@
 const Queue = require('bull');
 const Ticker = require('../model/ticker');
 const { queryCryptoQueue } = require('./queryCrypto');
-const { redisUrl } = require('../config');
+const { redisBullObj } = require('../config');
 
-console.log(redisUrl)
-
-const portfolioQueue = new Queue('portfolio_Update', redisUrl);
+const portfolioQueue = new Queue('portfolio_Update', redisBullObj);
 
 portfolioQueue.process(async (job, done) => {
   const tickers = await Ticker.find({});
