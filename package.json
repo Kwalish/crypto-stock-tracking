@@ -17,6 +17,7 @@
     "mongoose": "^6.1.8",
     "react-chartjs-2": "^4.0.1",
     "redis": "^4.0.2",
+    "redis-bull-parser": "^1.0.0",
     "redis-url-parse": "^2.0.0",
     "tslib": "^2.3.1"
   },

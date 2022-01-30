@@ -1,4 +1,4 @@
-const redisBullParser = require('../utils/redisBullParser');
+const redisBullParser = require('redis-bull-parser');
 require('dotenv').config();
 
 const dbUrl = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017/portfoliotracking';
