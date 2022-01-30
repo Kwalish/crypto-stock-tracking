@@ -3,9 +3,6 @@ require('dotenv').config();
 const adminRouter = require('./admin/adminJS');
 const queueRouter = require('./queues');
 
-const { portfolioQueue } = require('./queues/portfolio');
-
-
 require('./config/mongoose');
 require('./config/seed');
 require('./jobs');
