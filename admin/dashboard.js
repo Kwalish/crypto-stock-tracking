@@ -7,46 +7,80 @@ module.exports = {
     const totalSpent = await Transaction.aggregate([
       { $group: { _id: null, amount: { $sum: '$price' } } },
     ]);
-    const portfolio = await Transaction.aggregate([
-      { $group: { _id: '$ticker', amount: { $sum: '$amount' }, price: { $sum: '$price' } } },
-    ]);
-
-    const prices = await Price.aggregate([
-      {
-        $lookup: {
-          from: 'tickers',
-          localField: 'ticker',
-          foreignField: '_id',
-          as: 'ticker',
-        },
-      },
-      {
-        $group: {
-          _id: { $last: '$ticker' },
-          price: { $last: '$price' },
-          date: { $last: '$date' },
-        },
-      },
-    ]);
 
     const lastUpdatedAt = await Price.findOne().sort({ date: -1 });
 
-    const currentValue = portfolio.map((investment) => {
-      const price = prices
-        .filter((uniprice) => uniprice._id._id.toString() === investment._id.toString());
-      const currentPrice = price[0].price * investment.amount;
-      const currentProfit = currentPrice - investment.price;
-      return {
-        ticker: price[0]._id.ticker,
-        purchase: investment.amount,
-        value: currentPrice,
-        profit: currentProfit,
-      };
-    });
+    const currentValue = await Transaction.aggregate([
+      { $group: { _id: '$ticker', amount: { $sum: '$amount' }, price: { $sum: '$price' } } },
+      {
+        $lookup: {
+          from: 'prices',
+          localField: '_id',
+          foreignField: 'ticker',
+          as: 'prices',
+        },
+      },
+      {
+        $lookup: {
+          from: 'tickers',
+          localField: '_id',
+          foreignField: '_id',
+          as: 'tickers',
+        },
+      },
+      {
+        $set: {
+          currentPrice: { $last: '$prices' },
+          ticker: { $last: '$tickers' },
+        },
+      },
+      {
+        $set: {
+          value: { $multiply: ['$amount', '$currentPrice.price'] },
+        },
+      },
+      {
+        $set: {
+          profit: { $subtract: ['$value', '$price']},
+        },
+      },
+      {
+        $project: {
+          ticker: '$ticker.ticker',
+          purchase: '$price',
+          value: 1,
+          profit: 1,
+        },
+      },
+    ]);
+
+    const currentPlatforms = await Transaction.aggregate([
+      {
+        $lookup: {
+          from: 'prices',
+          localField: 'ticker',
+          foreignField: 'ticker',
+          as: 'prices',
+        },
+      },
+      {
+        $set: {
+          currentPrice: { $last: '$prices' },
+        },
+      },
+      {
+        $set: {
+          value: { $multiply: ['$amount', '$currentPrice.price'] },
+        },
+      },
+      { $group: { _id: '$platform', value: { $sum: '$value' } } },
+    ]);
+
     return {
       totalSpent: totalSpent[0].amount,
       currentValue,
       lastUpdatedAt,
+      currentPlatforms,
     };
   },
   component: AdminJS.bundle('./components/Dashboard.jsx'),

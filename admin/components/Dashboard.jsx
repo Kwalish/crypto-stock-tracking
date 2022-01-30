@@ -1,6 +1,10 @@
 import { ApiClient } from 'adminjs'
 import { Box, Text, Table, TableRow, TableCell, TableHead } from '@adminjs/design-system';
 import { useEffect, useState } from 'react';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, DomPlatform } from 'chart.js';
+import { Pie } from 'react-chartjs-2';
+
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 const api = new ApiClient()
 
@@ -10,16 +14,76 @@ const Dashboard = () => {
   useEffect(() => {
     // getting the data from adminbro object
     api.getDashboard().then((response) => {
-        const { totalSpent, currentValue, lastUpdatedAt } = response.data;
+        const { totalSpent, currentValue, lastUpdatedAt, currentPlatforms } = response.data;
         
         const totalValue = currentValue.reduce((a, b) => +a + (b.value || 0), 0)
         
         const totalProfit = totalValue - totalSpent
 
-        console.log(lastUpdatedAt)
+        const currentPlatformsPieData = {
+            labels: currentPlatforms.map(platform => platform._id),
+            datasets: [
+                {
+                    label: '% per platform',
+                    data: currentPlatforms.map(platform => platform.value),
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                      ],
+                      borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)',
+                      ],
+                      options: {  
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                }
+            ]
+        }
+
+        const currentValuePieData = {
+            labels: currentValue.map(ticker => ticker.ticker),
+            datasets: [
+                {
+                    label: '% per platform',
+                    data: currentValue.map(ticker => ticker.value),
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                      ],
+                      borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)',
+                      ],
+                      options: {  
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                }
+            ]
+        }
         
         setData({
             currentValue,
+            currentPlatformsPieData,
+            currentValuePieData,
             lastUpdatedAt: new Date(lastUpdatedAt.date),
             totalSpent: Math.round(totalSpent),
             totalValue: Math.round(totalValue),
@@ -40,6 +104,7 @@ const Dashboard = () => {
                 </Text>
             </Box>
         </Box>
+       
         <Box flex flexDirection="row" variant="grey">
             <Box flexGrow="1" flexBasis="0" variant="white" margin="5px">
                 <Text textAlign="center">
@@ -66,6 +131,16 @@ const Dashboard = () => {
                 </Text>
             </Box>
         </Box>
+
+        <Box flex flexDirection="row" variant="grey">
+            <Box flexGrow="1" flexBasis="0" variant="white" margin="5px">
+                {data.currentPlatformsPieData && <Pie data={data.currentPlatformsPieData} />}
+            </Box>
+            <Box flexGrow="1" flexBasis="0" variant="white" margin="5px">
+                {data.currentValuePieData && <Pie data={data.currentValuePieData} />}
+            </Box>
+        </Box>
+        
         <Table style={{backgroundColor: "white"}}>
             <TableHead style={{backgroundColor: "white"}}>
                 <TableRow>
