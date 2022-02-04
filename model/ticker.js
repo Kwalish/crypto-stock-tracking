@@ -7,6 +7,11 @@ const tickerSchema = new Schema({
     type: String,
     required: true,
   },
+  type: {
+    type: String,
+    enum: ['crypto', 'stock'],
+    required: true,
+  },
 });
 
 const Ticker = mongoose.model('Ticker', tickerSchema);

@@ -20,11 +20,6 @@ const transactionSchema = new Schema({
     type: Number,
     required: true,
   },
-  type: {
-    type: String,
-    enum: ['crypto', 'stock'],
-    required: true,
-  },
   platform: {
     type: String,
     required: true,
