@@ -19,7 +19,8 @@
     "redis": "^4.0.2",
     "redis-bull-parser": "^1.0.0",
     "redis-url-parse": "^2.0.0",
-    "tslib": "^2.3.1"
+    "tslib": "^2.3.1",
+    "yahoo-finance2": "^2.1.2"
   },
   "name": "tracking",
   "version": "1.0.0",
