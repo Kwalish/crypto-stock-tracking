@@ -10,9 +10,9 @@ portfolioQueue.process(async (job, done) => {
   const tickers = await Ticker.find({});
   tickers.forEach((ticker) => {
     if (ticker.type === 'crypto') {
-      queryCryptoQueue.add({ ticker });
+      queryCryptoQueue.add({ ticker }, { attempts: 5 });
     } else if (ticker.type === 'stock') {
-      queryStockQueue.add({ ticker });
+      queryStockQueue.add({ ticker }, { attempts: 5 });
     }
   });
   done();

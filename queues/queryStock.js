@@ -7,8 +7,12 @@ const queryStockQueue = new Queue('query_Stock', redisBullObj);
 
 queryStockQueue.process(async (job, done) => {
   const { ticker } = job.data.ticker;
-  const price = await queryStockAPI(ticker);
-  done(null, { ticker, price });
+  try {
+    const price = await queryStockAPI(ticker);
+    done(null, { ticker, price });
+  } catch (e) {
+    done(new Error('error'));
+  }
 });
 
 queryStockQueue.on('completed', async (job) => {
