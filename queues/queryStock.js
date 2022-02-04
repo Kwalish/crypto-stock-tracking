@@ -3,7 +3,7 @@ const Price = require('../model/price');
 const { redisBullObj } = require('../config');
 const queryStockAPI = require('../utils/queryStockAPI');
 
-const queryStockQueue = new Queue('query_Crypto', redisBullObj);
+const queryStockQueue = new Queue('query_Stock', redisBullObj);
 
 queryStockQueue.process(async (job, done) => {
   const { ticker } = job.data.ticker;
