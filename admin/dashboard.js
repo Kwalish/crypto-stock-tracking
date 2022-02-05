@@ -1,16 +1,20 @@
 const AdminJS = require('adminjs');
+const mongoose = require('mongoose');
 const Transaction = require('../model/transaction');
 const Price = require('../model/price');
 
 module.exports = {
-  handler: async () => {
+  handler: async (context) => {
+    const { adminUser: { _id: userId } } = context.session;
     const totalSpent = await Transaction.aggregate([
+      { $match: { user: mongoose.Types.ObjectId(userId) } },
       { $group: { _id: null, amount: { $sum: '$price' } } },
     ]);
 
     const lastUpdatedAt = await Price.findOne().sort({ date: -1 });
 
     const currentValue = await Transaction.aggregate([
+      { $match: { user: mongoose.Types.ObjectId(userId) } },
       { $group: { _id: '$ticker', amount: { $sum: '$amount' }, price: { $sum: '$price' } } },
       {
         $lookup: {
@@ -55,6 +59,7 @@ module.exports = {
     ]);
 
     const currentPlatforms = await Transaction.aggregate([
+      { $match: { user: mongoose.Types.ObjectId(userId) } },
       {
         $lookup: {
           from: 'prices',
