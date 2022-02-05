@@ -11,6 +11,9 @@ module.exports = {
   resource: Ticker,
   options: {
     properties: {
+      _id: {
+        isVisible: false,
+      },
       createdAt: {
         isVisible: false,
       },
