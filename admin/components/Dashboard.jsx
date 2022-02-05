@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, DomPlatform } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(ArcElement, Tooltip);
 
 const api = new ApiClient()
 
@@ -44,7 +44,12 @@ const Dashboard = () => {
                       ],
                       options: {  
                         responsive: true,
-                        maintainAspectRatio: false
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
                     }
                 }
             ]
@@ -134,10 +139,12 @@ const Dashboard = () => {
 
         <Box flex flexDirection="row" variant="grey">
             <Box flexGrow="1" flexBasis="0" variant="white" margin="5px">
-                {data.currentPlatformsPieData && <Pie data={data.currentPlatformsPieData} />}
+                <Text textAlign="center" marginBottom="15px" fontSize="25px" fontWeight="900">Breakdown by Platform</Text>
+                {data.currentPlatformsPieData && <Pie options={{plugins: {legend: {display: false}}}} data={data.currentPlatformsPieData} />}
             </Box>
             <Box flexGrow="1" flexBasis="0" variant="white" margin="5px">
-                {data.currentValuePieData && <Pie data={data.currentValuePieData} />}
+                <Text textAlign="center" marginBottom="15px" fontSize="25px" fontWeight="900">Breakdown by Ticker</Text>
+                {data.currentValuePieData && <Pie options={{plugins: {legend: {display: false}}}} data={data.currentValuePieData} />}
             </Box>
         </Box>
         
