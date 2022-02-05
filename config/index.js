@@ -8,6 +8,7 @@ const adminJSCookieString = process.env.ADMIN_JS_COOKIE_STRING || 'super-secret'
 const adminCreds = {
   email: process.env.ADMIN_EMAIL || 'admin@test.com',
   password: process.env.ADMIN_PASSWORD || 'secret',
+  isAdmin: true,
 };
 const redisBullObj = redisBullParser(process.env.REDIS_URL);
 

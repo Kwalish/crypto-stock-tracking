@@ -1,10 +1,10 @@
-const Admin = require('../model/admin');
+const User = require('../model/user');
 const { adminCreds } = require('./index');
 
 const createAdmin = async () => {
   try {
-    const admin = await Admin.findOne({ email: adminCreds.email });
-    if (!admin) Admin.create(adminCreds);
+    const admin = await User.findOne({ email: adminCreds.email });
+    if (!admin) User.create(adminCreds);
   } catch (e) {
     console.log('Admin account has already been created');
   }

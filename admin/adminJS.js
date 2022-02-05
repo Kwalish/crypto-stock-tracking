@@ -3,10 +3,13 @@ const AdminJSExpressjs = require('@adminjs/express');
 const AdminJSMongoose = require('@adminjs/mongoose');
 const { adminJSCookieString } = require('../config');
 
-const Ticker = require('../model/ticker');
-const Transaction = require('../model/transaction');
-const Price = require('../model/price');
-const Admin = require('../model/admin');
+const TickerResource = require('./resources/ticker');
+const TransactionResource = require('./resources/transaction');
+const UserResource = require('./resources/user');
+const PriceResource = require('./resources/price');
+
+// user for authentication
+const User = require('../model/user');
 
 const dashboard = require('./dashboard');
 
@@ -14,10 +17,10 @@ AdminJS.registerAdapter(AdminJSMongoose);
 
 const adminBro = new AdminJS({
   resources: [
-    Ticker,
-    Transaction,
-    Price,
-    Admin,
+    TickerResource,
+    TransactionResource,
+    UserResource,
+    PriceResource,
   ],
   dashboard,
   rootPath: '/admin',
@@ -25,7 +28,7 @@ const adminBro = new AdminJS({
 
 const router = AdminJSExpressjs.buildAuthenticatedRouter(adminBro, {
   authenticate: async (email, password) => {
-    const admin = await Admin.findOne({ email });
+    const admin = await User.findOne({ email });
     if (admin) {
       const matched = await admin.isValidPassword(password);
       if (matched) {
