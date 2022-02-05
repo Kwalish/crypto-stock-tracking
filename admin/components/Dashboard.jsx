@@ -1,7 +1,7 @@
 import { ApiClient } from 'adminjs'
 import { Box, Text, Table, TableRow, TableCell, TableHead } from '@adminjs/design-system';
 import { useEffect, useState } from 'react';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, DomPlatform } from 'chart.js';
+import { Chart as ChartJS, ArcElement, Tooltip } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 
 ChartJS.register(ArcElement, Tooltip);
