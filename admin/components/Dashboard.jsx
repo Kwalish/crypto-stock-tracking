@@ -16,9 +16,11 @@ const Dashboard = () => {
     api.getDashboard().then((response) => {
         const { totalSpent, currentValue, lastUpdatedAt, currentPlatforms } = response.data;
         
-        const totalValue = currentValue.reduce((a, b) => +a + (b.value || 0), 0)
+        const todayTotalValue = currentValue.reduce((a, b) => +a + (b.todayValue || 0), 0);
+        const yesterdayTotalValue = currentValue.reduce((a, b) => +a + (b.yesterdayValue || 0), 0);
         
-        const totalProfit = totalValue - totalSpent
+        const todayTotalProfit = todayTotalValue - totalSpent;
+        const yesterdayTotalProfit = yesterdayTotalValue - totalSpent;
 
         const currentPlatformsPieData = {
             labels: currentPlatforms.map(platform => platform._id),
@@ -91,8 +93,10 @@ const Dashboard = () => {
             currentValuePieData,
             lastUpdatedAt: new Date(lastUpdatedAt.date),
             totalSpent: Math.round(totalSpent),
-            totalValue: Math.round(totalValue),
-            totalProfit: Math.round(totalProfit),
+            todayTotalValue: Math.round(todayTotalValue),
+            yesterdayTotalValue: Math.round(yesterdayTotalValue),
+            todayTotalProfit: Math.round(todayTotalProfit),
+            yesterdayTotalProfit: Math.round(yesterdayTotalProfit)
         })
     })
   }, [])
@@ -123,17 +127,23 @@ const Dashboard = () => {
                 <Text textAlign="center">
                     current value (EUR)
                 </Text>
-                <Text fontSize="25px" fontWeight="900" marginTop="15px" textAlign="center" style={{ color: data.totalProfit > 0 ? 'green' : 'red' }}>    
-                    {data.totalValue}
+                <Text fontSize="25px" fontWeight="900" marginTop="15px" textAlign="center" style={{ color: data.todayTotalValue > 0 ? 'green' : 'red' }}>    
+                    {data.todayTotalValue}
+                </Text>
+                <Text fontSize="25px" fontWeight="900" marginTop="15px" textAlign="center" style={{ color: data.todayTotalValue - data.yesterdayTotalValue> 0 ? 'green' : 'red' }}>    
+                    ({data.todayTotalValue - data.yesterdayTotalValue} ~ {Math.round(((data.todayTotalValue*100) / data.yesterdayTotalValue) - 100)}%)
                 </Text>    
             </Box>
             <Box flexGrow="1" flexBasis="0" variant="white" margin="5px">
                 <Text textAlign="center">
                     profit (EUR)
                 </Text>
-                <Text fontSize="25px" fontWeight="900" marginTop="15px" textAlign="center" style={{ color: data.totalProfit > 0 ? 'green' : 'red' }}>
-                    {data.totalValue - data.totalSpent}
+                <Text fontSize="25px" fontWeight="900" marginTop="15px" textAlign="center" style={{ color: data.todayTotalProfit > 0 ? 'green' : 'red' }}>
+                    {data.todayTotalValue - data.totalSpent}
                 </Text>
+                <Text fontSize="25px" fontWeight="900" marginTop="15px" textAlign="center" style={{ color: data.todayTotalProfit - data.yesterdayTotalProfit> 0 ? 'green' : 'red' }}>    
+                    ({data.todayTotalProfit - data.yesterdayTotalProfit} ~ {Math.round(((data.todayTotalProfit*100) / data.yesterdayTotalProfit) - 100)}%)
+                </Text>    
             </Box>
         </Box>
 
