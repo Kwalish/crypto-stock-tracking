@@ -1,6 +1,5 @@
 const yahooFinance = require('yahoo-finance2');
-const axios = require('axios');
-const { fcsapiKey } = require('../config');
+const { exchangeRates } = require('exchange-rates-api');
 
 const queryStockAPI = async (ticker) => {
   const quote = await yahooFinance.default.quote(ticker);
@@ -8,9 +7,12 @@ const queryStockAPI = async (ticker) => {
 
   let price;
   if (currency !== 'EUR') {
-    const response = await axios.get(`https://fcsapi.com/api-v3/forex/latest?symbol=${currency}/EUR&access_key=${fcsapiKey}`);
-    const { c: conversion } = response.data.response[0];
-    price = conversion * regularMarketPrice;
+    const conversion = await exchangeRates()
+      .setApiBaseUrl('https://api.exchangerate.host')
+      .latest()
+      .symbols(currency)
+      .fetch();
+    price = regularMarketPrice / conversion;
   } else {
     price = regularMarketPrice;
   }
