@@ -60,7 +60,7 @@ const Dashboard = () => {
             datasets: [
                 {
                     label: '% per platform',
-                    data: currentValue.map(ticker => ticker.value),
+                    data: currentValue.map(ticker => ticker.todayValue),
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
                         'rgba(54, 162, 235, 0.2)',
@@ -182,12 +182,22 @@ const Dashboard = () => {
                         {current.purchase}
                     </TableCell>
                     <TableCell>
-                        {Math.round(current.value)}
+                        <div style={{display: 'flex'}}>
+                            <Text>{Math.round(current.todayValue)}</Text>
+                            &nbsp;
+                            <Text>({Math.round(current.yesterdayValue)})</Text>
+                        </div>
                     </TableCell>
                     <TableCell>
-                        <Text fontWeight="900" style={{ color: current.profit > 0 ? 'green' : 'red' }}>
-                            {Math.round(current.profit)}
-                        </Text>
+                        <div style={{display: 'flex'}}>
+                            <Text fontWeight="900" style={{ color: current.todayProfit > 0 ? 'green' : 'red' }}>
+                                {Math.round(current.todayProfit)}
+                            </Text>
+                            &nbsp;
+                            <Text fontWeight="900" style={{ color: current.todayProfit - current.yesterdayProfit > 0 ? 'green' : 'red' }}>
+                                ({Math.round(current.yesterdayProfit)} ~ {Math.round(((current.todayProfit*100) / current.yesterdayProfit) - 100)}%) 
+                            </Text>
+                        </div>
                     </TableCell>
                 </TableRow>
             )}

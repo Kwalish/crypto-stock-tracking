@@ -1,5 +1,6 @@
 const AdminJS = require('adminjs');
 const mongoose = require('mongoose');
+const moment = require('moment-timezone');
 const Transaction = require('../model/transaction');
 const Price = require('../model/price');
 
@@ -13,15 +14,32 @@ module.exports = {
 
     const lastUpdatedAt = await Price.findOne().sort({ date: -1 });
 
+    const yesterday = moment()
+      .tz('Asia/Seoul')
+      .subtract(1, 'days')
+      .startOf('day')
+      .toString();
+
     const currentValue = await Transaction.aggregate([
       { $match: { user: mongoose.Types.ObjectId(userId) } },
       { $group: { _id: '$ticker', amount: { $sum: '$amount' }, price: { $sum: '$price' } } },
       {
         $lookup: {
           from: 'prices',
-          localField: '_id',
-          foreignField: 'ticker',
           as: 'prices',
+          let: { tickerID: '$_id' },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ['$ticker', '$$tickerID'] },
+                    { $lte: ['$dateCreated', yesterday] },
+                  ],
+                },
+              },
+            },
+          ],
         },
       },
       {
@@ -34,26 +52,31 @@ module.exports = {
       },
       {
         $set: {
-          currentPrice: { $last: '$prices' },
+          todayPrice: { $last: '$prices' },
+          yesterdayPrice: { $first: '$prices' },
           ticker: { $last: '$tickers' },
         },
       },
       {
         $set: {
-          value: { $multiply: ['$amount', '$currentPrice.price'] },
+          todayValue: { $multiply: ['$amount', '$todayPrice.price'] },
+          yesterdayValue: { $multiply: ['$amount', '$yesterdayPrice.price'] },
         },
       },
       {
         $set: {
-          profit: { $subtract: ['$value', '$price']},
+          todayProfit: { $subtract: ['$todayValue', '$todayPrice.price'] },
+          yesterdayProfit: { $subtract: ['$yesterdayValue', '$yesterdayPrice.price'] },
         },
       },
       {
         $project: {
           ticker: '$ticker.ticker',
           purchase: '$amount',
-          value: 1,
-          profit: 1,
+          todayValue: 1,
+          todayProfit: 1,
+          yesterdayValue: 1,
+          yesterdayProfit: 1,
         },
       },
     ]);
