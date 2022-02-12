@@ -34,7 +34,7 @@ module.exports = {
                 $expr: {
                   $and: [
                     { $eq: ['$ticker', '$$tickerID'] },
-                    { $lte: ['$dateCreated', yesterday] },
+                    { $gte: ['$date', yesterday] },
                   ],
                 },
               },
