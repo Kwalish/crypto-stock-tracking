@@ -163,12 +163,12 @@ const Dashboard = () => {
                     </TableCell>
                     <TableCell>
                         <Text fontSize="15px" fontWeight="900">
-                            current value
+                            today value (yesterday value)
                         </Text>
                     </TableCell>
                     <TableCell>
                         <Text fontSize="15px" fontWeight="900">
-                            profit/loss
+                            profit/loss (yesterday profit/loss ~ percentage)
                         </Text>
                     </TableCell>
                 </TableRow>
