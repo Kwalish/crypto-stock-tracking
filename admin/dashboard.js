@@ -65,8 +65,8 @@ module.exports = {
       },
       {
         $set: {
-          todayProfit: { $subtract: ['$todayValue', '$todayPrice.price'] },
-          yesterdayProfit: { $subtract: ['$yesterdayValue', '$yesterdayPrice.price'] },
+          todayProfit: { $subtract: ['$todayValue', '$price'] },
+          yesterdayProfit: { $subtract: ['$yesterdayValue', '$price'] },
         },
       },
       {
